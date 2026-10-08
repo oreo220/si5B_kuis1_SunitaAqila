@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+
 const classroomRoutes = require("./routes/classroomRoutes");
 const logger = require("./middlewares/logger");
 const {
@@ -10,9 +11,11 @@ const {
 } = require("./middlewares/errorHandler");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(logger);
+
 app.get("/", (req, res) => {
     res.json({
         nama: "Sunita Aqila",
@@ -31,14 +34,14 @@ app.get("/", (req, res) => {
 
 app.use("/classrooms", classroomRoutes);
 
-// Rute tidak ditemukan
 app.use(notFoundHandler);
 
-// Error handler terpusat
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
+
 module.exports = app;

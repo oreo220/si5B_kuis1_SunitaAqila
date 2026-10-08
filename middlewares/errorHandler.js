@@ -1,6 +1,8 @@
 function errorHttp(status, message) {
     const err = new Error(message);
+
     err.status = status;
+
     return err;
 }
 
@@ -16,18 +18,24 @@ function errorHandler(err, req, res, next) {
             message: "Format JSON tidak valid"
         });
     }
+
     const status = err.status || 500;
+
     if (status === 500) {
         console.error(err.stack);
-        
+
         return res.status(500).json({
             message: "Terjadi kesalahan pada server"
         });
     }
+
     res.status(status).json({
         message: err.message
     });
 }
+
 module.exports = {
-    errorHttp, notFoundHandler, errorHandler
+    errorHttp,
+    notFoundHandler,
+    errorHandler
 };

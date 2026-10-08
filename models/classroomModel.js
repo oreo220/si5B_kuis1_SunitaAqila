@@ -31,6 +31,7 @@ function getAll(gedung) {
     if (gedung) {
         return classrooms.filter((c) => c.gedung === gedung);
     }
+
     return classrooms;
 }
 
@@ -40,25 +41,33 @@ function getById(id) {
 
 function create(data) {
     const baru = { id: nextId++, ...data };
+
     classrooms.push(baru);
+
     return baru;
 }
 
 function update(id, data) {
     const index = classrooms.findIndex((c) => c.id === id);
+
     if (index === -1) return null;
+
     classrooms[index] = {
         ...classrooms[index],
         ...data,
         id
     };
+
     return classrooms[index];
 }
 
 function remove(id) {
     const index = classrooms.findIndex((c) => c.id === id);
+
     if (index === -1) return false;
+
     classrooms.splice(index, 1);
+
     return true;
 }
 
