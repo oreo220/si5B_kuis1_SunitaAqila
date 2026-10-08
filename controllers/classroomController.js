@@ -64,13 +64,15 @@ exports.update = (req, res, next) => {
 
 exports.remove = (req, res, next) => {
     const id = parseInt(req.params.id);
+
     const data = classroomModel.getById(id);
 
     if (!data) {
         return next(errorHttp(404, "Ruang kelas tidak ditemukan"));
     }
+
     classroomModel.remove(id);
-    res.json({
-        message: "Ruang kelas berhasil dihapus"
-    });
+
+    res.status(204).send();
+
 };
