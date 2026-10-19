@@ -1,0 +1,454 @@
+{
+  "info": {
+    "_postman_id": "de22cb00-ec67-4e3e-820e-6a9d8a653bc9",
+    "name": "Tugas 2 - RESTful API Ruang Kelas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58487284",
+    "_collection_link": "https://go.postman.co/collection/58487284-de22cb00-ec67-4e3e-820e-6a9d8a653bc9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "A. CRUD",
+      "item": [
+        {
+          "name": "GET Semua Ruang Kelas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response berupa array\", function () {\r\n    pm.expect(pm.response.json()).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Minimal ada 3 data awal\", function () {\r\n    pm.expect(pm.response.json().length).to.be.at.least(3);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/classrooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Ruang Kelas Berdasarkan ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Data memiliki field yang diperlukan\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"id\");\r\n    pm.expect(data).to.have.property(\"kodeRuang\");\r\n    pm.expect(data).to.have.property(\"gedung\");\r\n    pm.expect(data).to.have.property(\"kapasitas\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/classrooms/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Tambah Ruang Kelas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Data baru berhasil dibuat\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data).to.have.property(\"id\");\r\n    pm.expect(data.kodeRuang).to.eql(\"S-2428240072\");\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.environment.set(\"classroomId\", data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"S-2428240072\",\r\n  \"gedung\": \"S\",\r\n  \"lantai\": 4,\r\n  \"kapasitas\": 40,\r\n  \"adaProyektor\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Ubah Ruang Kelas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Data berhasil diperbarui\", function () {\r\n    const data = pm.response.json();\r\n\r\n    pm.expect(data.kapasitas).to.eql(45);\r\n    pm.expect(data.kodeRuang).to.eql(\"S-2428240072\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"S-2428240072\",\r\n  \"gedung\": \"S\",\r\n  \"lantai\": 4,\r\n  \"kapasitas\": 45,\r\n  \"adaProyektor\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms/{{classroomId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "{{classroomId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Ruang Kelas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 204\", function () {\n    pm.response.to.have.status(204);\n});\n\npm.test(\"Response body is empty\", function () {\n    pm.expect(pm.response.text()).to.be.empty;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/classrooms/{{classroomId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "{{classroomId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "B. Skenario Gagal",
+      "item": [
+        {
+          "name": "GET ID Ruang Kelas tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 404', function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test('Pesan error: Ruang kelas tidak ditemukan', function () {\r\n    pm.expect(pm.response.json().message).to.eql('Ruang kelas tidak ditemukan');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/classrooms/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Data ruang kelas tidak lengkap",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 400', function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test('Pesan error: Field wajib belum lengkap', function () {\r\n    pm.expect(pm.response.json().message).to.eql('kodeRuang, gedung, dan kapasitas wajib diisi');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"Sunita-999\",\r\n  \"gedung\": \"S\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Tanpa API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 401', function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test('Pesan error: API key tidak valid', function () {\r\n    pm.expect(pm.response.json().message).to.eql('API key tidak valid');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"S-999\",\r\n  \"gedung\": \"S\",\r\n  \"lantai\": 4,\r\n  \"kapasitas\": 40,\r\n  \"adaProyektor\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Ruang kelas tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 404', function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test('Pesan error: Ruang kelas tidak ditemukan', function () {\r\n    pm.expect(pm.response.json().message).to.eql('Ruang kelas tidak ditemukan');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"S-999\",\r\n  \"gedung\": \"S\",\r\n  \"lantai\": 4,\r\n  \"kapasitas\": 40,\r\n  \"adaProyektor\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT API Key Salah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 401', function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test('Pesan error: API key tidak valid', function () {\r\n    pm.expect(pm.response.json().message).to.eql('API key tidak valid');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "SALAH123"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"kodeRuang\": \"S-301\",\r\n  \"gedung\": \"S\",\r\n  \"lantai\": 3,\r\n  \"kapasitas\": 40,\r\n  \"adaProyektor\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/classrooms/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE ID ruang kelas tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 404', function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test('Pesan error: Ruang kelas tidak ditemukan', function () {\r\n    pm.expect(pm.response.json().message).to.eql('Ruang kelas tidak ditemukan');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/classrooms/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Tanpa API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code adalah 401', function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test('Pesan error: API key tidak valid', function () {\r\n    pm.expect(pm.response.json().message).to.eql('API key tidak valid');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/classrooms/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "classrooms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
