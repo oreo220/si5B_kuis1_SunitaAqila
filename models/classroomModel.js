@@ -1,80 +1,65 @@
-let classrooms = [
+
+const mongoose = require("mongoose");
+
+// Subschema untuk embedding fasilitas
+const fasilitasSchema = new mongoose.Schema(
     {
-        id: 1,
-        kodeRuang: "A-301",
-        gedung: "A",
-        lantai: 3,
-        kapasitas: 40,
-        adaProyektor: true
+        nama: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        tersedia: {
+            type: Boolean,
+            default: true
+        }
     },
     {
-        id: 2,
-        kodeRuang: "A-406",
-        gedung: "A",
-        lantai: 4,
-        kapasitas: 35,
-        adaProyektor: true
+        _id: false
+    }
+);
+
+// Schema utama ruang kelas
+const classroomSchema = new mongoose.Schema(
+    {
+        kodeRuang: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true
+        },
+        gedung: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        buildingId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Building",
+            required: true
+        },
+        lantai: {
+            type: Number,
+            required: true,
+            min: 1
+        },
+        kapasitas: {
+            type: Number,
+            required: true,
+            min: 1
+        },
+        adaProyektor: {
+            type: Boolean,
+            default: false
+        },
+        fasilitas: {
+            type: [fasilitasSchema],
+            default: []
+        }
     },
     {
-        id: 3,
-        kodeRuang: "B-605",
-        gedung: "B",
-        lantai: 6,
-        kapasitas: 45,
-        adaProyektor: false
+        timestamps: true
     }
-];
+);
 
-let nextId = 4;
-
-function getAll(gedung) {
-    if (gedung) {
-        return classrooms.filter((c) => c.gedung === gedung);
-    }
-
-    return classrooms;
-}
-
-function getById(id) {
-    return classrooms.find((c) => c.id === id);
-}
-
-function create(data) {
-    const baru = { id: nextId++, ...data };
-
-    classrooms.push(baru);
-
-    return baru;
-}
-
-function update(id, data) {
-    const index = classrooms.findIndex((c) => c.id === id);
-
-    if (index === -1) return null;
-
-    classrooms[index] = {
-        ...classrooms[index],
-        ...data,
-        id
-    };
-
-    return classrooms[index];
-}
-
-function remove(id) {
-    const index = classrooms.findIndex((c) => c.id === id);
-
-    if (index === -1) return false;
-
-    classrooms.splice(index, 1);
-
-    return true;
-}
-
-module.exports = {
-    getAll,
-    getById,
-    create,
-    update,
-    remove
-};
+module.exports = mongoose.model("Classroom", classroomSchema);
